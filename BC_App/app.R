@@ -1,5 +1,6 @@
 library(shiny)
 library(dplyr)
+library(htmltools)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -16,7 +17,9 @@ ui <- fluidPage(
                             choices = list("Sepal.Length" = 1,"Sepal.Width" = 2,"Petal.Length" = 3,"Petal.Width" = 4),
                             selected=""),
                 radioButtons("color", "Choose a display color for the plot",
-                             choices = c("Green","Blue","Purple"),selected="Purple")
+                             choices = c("Green","Blue","Purple"),selected="Purple"),
+                h6("Powered by"),
+                tags$img(src="RStudio-Ball.png",height=50,width=50)
                 
                         ),
 
@@ -25,6 +28,7 @@ ui <- fluidPage(
                 tabsetPanel(type = "tab",
                 tabPanel("Summary Data",verbatimTextOutput("sum")),
                 tabPanel("Species Input Demo",textOutput("specname")),
+                tabPanel("Species Type",tags$ul(tags$img(src="setosa.jpg",height=400,width=400),tags$img(src="versicolor.jpg",height=400,width=400),tags$img(src="virginica.jpg",height=400,width=400))),
                 tabPanel("Basic Plot",plotOutput("var")),
                 tabPanel("Complex Plot",plotOutput("var2"))
                 )
@@ -55,7 +59,12 @@ server <- function(input, output)
     
     output$var2<- renderPlot(hist(a()[,colm()],col = input$color,main = paste("Histogram of Iris Dataset by",input$species),xlab = names(a()[colm()])))
        
-    
+    # b<-reactive(
+    #     {
+    #         as.character(paste(input$species,".jpg",sep = ""))
+    #     }
+    # )
+    # output$img<-renderText(dQuote(b()))
 }
 
 # Run the application 
